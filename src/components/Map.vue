@@ -2,11 +2,11 @@
   <div class="map">
     <h3>Карта офиса</h3>
 
-    <div v-if="!isLoading" class="map-root">
+    <div v-show="!isLoading" class="map-root">
       <MapSVG ref="svg" />
       <TableSVG v-show="false" ref="table" />
     </div>
-    <div v-else>Loading...</div>
+    <div v-show="isLoading">Loading...</div>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
+      isLoading: true,
       svg: null,
       g: null,
       tables: [],
@@ -52,7 +52,8 @@ export default {
   },
   methods: {
     onClickOutside() {
-      this.$emit("update:personSelect", null);
+      this.unselectTable();
+      this.$emit("update:personSelect");
     },
     drawTables() {
       const svgTablesGroup = this.g.append("g").classed("groupPlaces", true);
@@ -78,9 +79,32 @@ export default {
           .on("click", (e) => {
             e.stopPropagation();
 
+            this.selectTable(svgTable);
+
             this.$emit("update:personSelect", table._id);
-          });
+          })
+          .append("circle")
+          .classed("selected-element-marker", true)
+          .attr("cx", 1)
+          .attr("cy", 1)
+          .attr("r", "2px")
+          .style("fill", "transparent");
       });
+
+      this.isLoading = false;
+    },
+    selectTable(svgTable) {
+      this.unselectTable();
+
+      svgTable.classed("selected-table", true);
+      svgTable.select(".selected-element-marker").style("fill", "red");
+    },
+    unselectTable() {
+      const selectedTable = d3.select(".selected-table");
+      selectedTable
+        .select(".selected-element-marker")
+        .style("fill", "transparent");
+      selectedTable.classed("selected-table", false);
     },
   },
 };

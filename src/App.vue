@@ -4,7 +4,7 @@
       <Map @update:personSelect="onPersonSelect" />
       <SideMenu
         :person="person"
-        :isUserOpenned="!!person"
+        :isUserOpenned="Boolean(person)"
         @update:isUserOpenned="onPersonSelect"
       />
     </div>
