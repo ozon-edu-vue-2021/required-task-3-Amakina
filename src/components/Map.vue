@@ -22,6 +22,12 @@ export default {
     MapSVG,
     TableSVG,
   },
+  props: {
+    isUserOpenned: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isLoading: true,
@@ -31,7 +37,13 @@ export default {
       tableSVG: null,
     };
   },
-  created() {},
+  watch: {
+    isUserOpenned(v) {
+      if (!v) {
+        this.unselectTable();
+      }
+    },
+  },
   destroyed() {
     this.$el.removeEventListener("click", this.onClickOutside);
   },

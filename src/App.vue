@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <div class="office">
-      <Map @update:personSelect="onPersonSelect" />
+      <Map
+        @update:personSelect="onPersonSelect"
+        :isUserOpenned="isUserOpenned"
+      />
       <SideMenu
         :person="person"
-        :isUserOpenned="Boolean(person)"
+        :isUserOpenned="isUserOpenned"
         @update:isUserOpenned="onPersonSelect"
       />
     </div>
@@ -26,6 +29,11 @@ export default {
     return {
       person: null,
     };
+  },
+  computed: {
+    isUserOpenned() {
+      return Boolean(this.person);
+    },
   },
   methods: {
     onPersonSelect(tableId) {
